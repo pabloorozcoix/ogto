@@ -1,0 +1,2 @@
+
+export const REFLECT_COVERAGE_SCORE_GAP_DIVISOR = 10;

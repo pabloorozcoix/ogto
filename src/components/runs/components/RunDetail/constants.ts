@@ -1,0 +1,6 @@
+export const RUN_DETAIL_ARTIFACT_SUMMARY_PREVIEW_CHARS = 600;
+
+export const CONFIDENCE_DECIMALS = 2;
+export const CONFIDENCE_HIGH_MIN = 0.8;
+export const CONFIDENCE_MED_MIN = 0.6;
+export const CONFIDENCE_LOW_MIN = 0.4;

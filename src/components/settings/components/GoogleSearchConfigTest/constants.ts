@@ -1,0 +1,3 @@
+import { JSON_PRETTY_PRINT_SPACES } from "@/lib/constants";
+
+export const GOOGLE_SEARCH_RESULT_JSON_SPACES = JSON_PRETTY_PRINT_SPACES;

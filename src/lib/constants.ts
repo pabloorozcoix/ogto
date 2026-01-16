@@ -1,0 +1,7 @@
+export const MAX_WEB_SEARCH_RESULTS = 10;
+
+
+export const JSON_PRETTY_PRINT_SPACES = 2;
+
+
+export const DEFAULT_OUTPUT_MAX_TOKENS = 16384;

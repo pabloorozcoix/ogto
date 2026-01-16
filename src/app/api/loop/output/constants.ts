@@ -1,0 +1,10 @@
+
+
+import { DEFAULT_OUTPUT_MAX_TOKENS } from "@/lib/constants";
+
+export const OUTPUT_DEFAULT_MAX_TOKENS = DEFAULT_OUTPUT_MAX_TOKENS;
+export const OUTPUT_MIN_TOKENS = 256;
+export const OUTPUT_MAX_TOKENS = DEFAULT_OUTPUT_MAX_TOKENS;
+
+
+export const OUTPUT_TARGET_WORDS = 12000;

@@ -1,0 +1,2 @@
+
+export const TEXT_SUMMARY_MAX_OUTPUT_TOKENS = 1600;
