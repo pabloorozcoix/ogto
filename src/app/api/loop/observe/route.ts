@@ -95,7 +95,7 @@ export async function POST(req: Request) {
       .map(
         ([url, summary]) =>
           `URL: ${url}\nSummary: ${
-            typeof summary === "string" ? summary : "No summary"
+            typeof summary === "string" ? summary : "Summary queued"
           }`
       )
       .join("\n---\n");

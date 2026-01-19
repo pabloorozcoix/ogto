@@ -233,33 +233,33 @@ OGTO agents use a **LOOP strategy** for iterative research:
 
 \`\`\`
 ┌─────────────────────────────────────────────────────────────┐
-│  ITERATION N (repeated up to model_max_iterations)         │
+│  ITERATION N (repeated up to model_max_iterations)          │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  1. SEARCH ──────────────────────────────────────────────  │
-│     • Query: goal_title (same query, paginated)            │
-│     • Formula: start = 1 + (cycle × MAX_WEB_SEARCH_RESULTS)│
-│     • Results: 10 per cycle (MAX_WEB_SEARCH_RESULTS = 10)  │
+│  1. SEARCH ──────────────────────────────────────────────   │
+│     • Query: goal_title (same query, paginated)             │
+│     • Formula: start = 1 + (cycle × MAX_WEB_SEARCH_RESULTS) │
+│     • Results: 10 per cycle (MAX_WEB_SEARCH_RESULTS = 10)   │
 │                                                             │
-│  2. FETCH ───────────────────────────────────────────────  │
-│     • Retrieve full content from discovered URLs           │
-│     • Skip already-visited URLs (deduplication)            │
-│     • Handle blocked/failed fetches gracefully             │
+│  2. FETCH ───────────────────────────────────────────────   │
+│     • Retrieve full content from discovered URLs            │
+│     • Skip already-visited URLs (deduplication)             │
+│     • Handle blocked/failed fetches gracefully              │
 │                                                             │
-│  3. SUMMARIZE ───────────────────────────────────────────  │
-│     • LLM summarizes each page's content                   │
-│     • Extracts key facts, quotes, and data                 │
-│     • Preserves source attribution                         │
+│  3. SUMMARIZE ───────────────────────────────────────────   │
+│     • LLM summarizes each page's content                    │
+│     • Extracts key facts, quotes, and data                  │
+│     • Preserves source attribution                          │
 │                                                             │
-│  4. OBSERVE ─────────────────────────────────────────────  │
-│     • Streams analysis of accumulated summaries            │
-│     • Identifies patterns across sources                   │
-│     • Generates structured observation (headline, details) │
+│  4. OBSERVE ─────────────────────────────────────────────   │
+│     • Streams analysis of accumulated summaries             │
+│     • Identifies patterns across sources                    │
+│     • Generates structured observation (headline, details)  │
 │                                                             │
-│  5. REFLECT ─────────────────────────────────────────────  │
-│     • Evaluates: Is the goal satisfied?                    │
-│     • If YES → Generate final OUTPUT and stop              │
-│     • If NO  → Continue to next iteration                  │
+│  5. REFLECT ─────────────────────────────────────────────   │
+│     • Evaluates: Is the goal satisfied?                     │
+│     • If YES → Generate final OUTPUT and stop               │
+│     • If NO  → Continue to next iteration                   │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 \`\`\`

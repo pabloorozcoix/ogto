@@ -15,7 +15,7 @@ export function useSummaries(setPending: (updater: (p: Record<string, boolean>) 
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/x-ndjson' },
           body: JSON.stringify({ text: content, agent_state_id: agentStateId, rationale: `Summarize content from URL: ${url}` }),
         });
-        if (!res.body) throw new Error('No summary stream body');
+        if (!res.body) throw new Error('Summary queued stream body');
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let buffer = '';

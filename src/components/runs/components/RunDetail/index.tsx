@@ -133,8 +133,12 @@ export default function RunDetail({ params }: { params: Promise<{ runId: string 
                 Delete
               </button>
             </div>
-            <p className="text-neutral-300 mb-2">{agentState.agent_ctx?.goal_system_prompt}</p>
-            <div className="text-xs text-neutral-500 mb-2">Run ID: {agentState.id}</div>
+            <div className="text-xs text-neutral-400 mb-2">Goal System Prompt</div>
+            <MarkdownViewer
+              markdown={renderText(agentState.agent_ctx?.goal_system_prompt)}
+              placeholder="No system prompt defined."
+            />
+            <div className="text-xs text-neutral-500 mb-2 mt-4">Run ID: {agentState.id}</div>
             <div className="flex gap-4 text-sm text-neutral-400 mb-2">
               <span>Iterations: {agentState.iterations_completed}</span>
               <span>Steps: {agentState.steps_used}</span>
@@ -216,8 +220,11 @@ export default function RunDetail({ params }: { params: Promise<{ runId: string 
               <div className="mb-4">
                 <h3 className="text-lg font-bold text-blue-300 mb-2">Plan</h3>
                 <div><strong>Query:</strong> {plan.query}</div>
-                <div><strong>System Prompt:</strong> {plan.systemPrompt}</div>
-                <div><strong>Agent Name:</strong> {plan.agentName}</div>
+                <div className="mt-2">
+                  <div className="text-xs text-neutral-400 mb-2">System Prompt</div>
+                  <MarkdownViewer markdown={renderText(plan.systemPrompt)} placeholder="No system prompt defined." />
+                </div>
+                <div className="mt-2"><strong>Agent Name:</strong> {plan.agentName}</div>
               </div>
             )}
 
@@ -248,7 +255,7 @@ export default function RunDetail({ params }: { params: Promise<{ runId: string 
                               <strong>Summary:</strong>{" "}
                               {summaries[url]
                                 ? renderText(summaries[url])
-                                : (pending[url] ? "Summarizing..." : "No summary")}
+                                : (pending[url] ? "Summarizing..." : "Summary queued")}
                             </div>
                           </div>
                         ))}
