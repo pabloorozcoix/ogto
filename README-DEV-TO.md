@@ -1,6 +1,6 @@
 ## TL;DR
 
-I built **OGTO** (Open Goal-Task Orchestrator) — an AI research agent that:
+I built **OGTO** (Open Goal-Task Orchestrator), an AI research agent that:
 
 - 🔍 Searches Google for your research topic
 - 📄 Fetches and reads web pages
@@ -73,7 +73,7 @@ Each phase:
 
 ## The Secret Sauce: Pagination
 
-Here's what makes OGTO actually useful — **it doesn't stop at the first 10 results**.
+Here's what makes OGTO actually useful, **it doesn't stop at the first 10 results**.
 
 Each cycle searches for fresh results using the same query but advancing the `start` parameter:
 
@@ -241,7 +241,7 @@ CREATE INDEX idx_memory_embedding
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - Docker (for Supabase)
 - Ollama
 - Google Custom Search API credentials
