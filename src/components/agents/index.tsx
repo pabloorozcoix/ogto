@@ -159,7 +159,7 @@ export function AgentsComponent() {
                     required
                     placeholder="Enter agent name"
                     title="Agent Name"
-                    className="bg-neutral-950 text-neutral-200"
+                    className="bg-neutral-950 text-neutral-400 cursor-not-allowed opacity-70 border-neutral-700"
                   />
                   {errors.agent_name && (
                     <p className="text-red-500 text-xs mt-1">
@@ -179,7 +179,7 @@ export function AgentsComponent() {
                     required
                     placeholder="Enter agent role"
                     title="Agent Role"
-                    className="bg-neutral-950 text-neutral-200"
+                    className="bg-neutral-950 text-neutral-400 cursor-not-allowed opacity-70 border-neutral-700"
                   />
                   {errors.agent_role && (
                     <p className="text-red-500 text-xs mt-1">
@@ -234,7 +234,7 @@ export function AgentsComponent() {
                     rows={3}
                     placeholder="Enter system prompt instructions"
                     title="Goal System Prompt"
-                    className="bg-neutral-950 text-neutral-200"
+                    className="bg-neutral-950 text-neutral-400 cursor-not-allowed opacity-70 border-neutral-700"
                   />
                   {errors.goal_system_prompt && (
                     <p className="text-red-500 text-xs mt-1">
