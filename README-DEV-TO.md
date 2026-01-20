@@ -12,7 +12,7 @@ I built **OGTO** (Open Goal-Task Orchestrator), an AI research agent that:
 
 **No OpenAI API key needed.** Everything runs locally with Ollama and Open Source **Consumer Small Language Models**.
 
-[GitHub Repository](https://github.com/your-username/ogto) | [Live Demo (localhost)](http://localhost:3000)
+[GitHub Repository](https://github.com/josoroma/ogto) | [Live Demo (localhost)](http://localhost:3000)
 
 ---
 
@@ -252,7 +252,7 @@ CREATE INDEX idx_memory_embedding
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/your-username/ogto.git
+git clone https://github.com/josoroma/ogto.git
 cd ogto
 npm install
 
@@ -325,7 +325,7 @@ Watching the agent work in real-time (streaming summaries, updating progress) ma
 
 The entire project is open source:
 
-🔗 **GitHub:** [github.com/your-username/ogto](https://github.com/your-username/ogto)
+🔗 **GitHub:** [github.com/josoroma/ogto](https://github.com/josoroma/ogto)
 
 If you find it useful:
 - ⭐ Star the repo
