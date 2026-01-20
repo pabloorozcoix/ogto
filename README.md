@@ -478,92 +478,88 @@ OGTO uses PostgreSQL (via Supabase) with pgvector for semantic search. The schem
 │                           OGTO Database Schema                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  ┌──────────────┐                                                           │
-│  │  agent_ctx   │  Agent configuration (immutable after creation)           │
-│  │──────────────│                                                           │
-│  │ id (PK)      │                                                           │
-│  │ agent_name   │                                                           │
-│  │ agent_role   │                                                           │
-│  │ goal_title   │                                                           │
-│  │ goal_system_ │                                                           │
-│  │   prompt     │                                                           │
-│  │ model        │                                                           │
-│  │ model_temp   │                                                           │
-│  │ model_max_*  │                                                           │
-│  │ budget_max_* │                                                           │
-│  └──────┬───────┘                                                           │
-│         │ 1                                                                 │
-│         │                                                                   │
-│         ▼ N                                                                 │
-│  ┌──────────────┐                                                           │
-│  │ agent_state  │  Run state (mutable, tracks progress)                     │
-│  │──────────────│                                                           │
-│  │ id (PK)      │◄─────────────────────────────────────────────┐            │
-│  │ agent_ctx_id │                                              │            │
-│  │ iterations_  │                                              │            │
-│  │   completed  │                                              │            │
-│  │ steps_used   │                                              │            │
-│  │ tokens_used  │                                              │            │
-│  │ cost_used    │                                              │            │
-│  │ summary      │                                              │            │
-│  │ status       │                                              │            │
-│  └──────┬───────┘                                              │            │
-│         │ 1                                                    │            │
-│         │                                                      │            │
-│    ┌────┴────┬──────────────────────────┐                      │            │
-│    │         │                          │                      │            │
-│    ▼ N       ▼ N                        ▼ N                    │            │
-│ ┌────────┐ ┌──────────┐          ┌─────────────────────┐       │            │
-│ │ memory │ │plan_step │          │claim_confidence_log │       │            │
-│ │────────│ │──────────│          │─────────────────────│       │            │
-│ │ id     │ │ id (PK)  │          │ id (PK)             │       │            │
-│ │ text   │ │ rationale│          │ agent_state_id (FK) │───────┘            │
-│ │ tags   │ │ tool_name│          │ observation_id      │                    │
-│ │ source │ │ args     │          │ statement           │                    │
-│ │embedding││ success_ │          │ heuristic_confidence│                    │
-│ │(vector)│ │  criteria│          │ llm_confidence      │                    │
-│ └────────┘ └────┬─────┘          │ blended_confidence  │                    │
-│                 │ 1              └─────────────────────┘                    │
-│                 │                                                           │
-│                 ▼ N                                                         │
-│          ┌─────────────┐                                                    │
-│          │ tool_result │  Result of tool execution                          │
-│          │─────────────│                                                    │
-│          │ id (PK)     │                                                    │
-│          │ plan_step_id│                                                    │
-│          │ ok          │                                                    │
-│          │ data (jsonb)│                                                    │
-│          │ error       │                                                    │
-│          │ meta (jsonb)│                                                    │
-│          └──────┬──────┘                                                    │
-│                 │ 1                                                         │
-│                 │                                                           │
-│                 ▼ N                                                         │
-│          ┌─────────────┐                                                    │
-│          │ observation │  Pattern analysis output                           │
-│          │─────────────│                                                    │
-│          │ id (PK)     │                                                    │
-│          │ tool_result │                                                    │
-│          │   _id       │                                                    │
-│          │ headline    │                                                    │
-│          │ details     │                                                    │
-│          │ artifacts   │                                                    │
-│          │ quality     │                                                    │
-│          └──────┬──────┘                                                    │
-│                 │ 1                                                         │
-│                 │                                                           │
-│                 ▼ N                                                         │
-│          ┌──────────────┐                                                   │
-│          │ reflection   │  Goal satisfaction evaluation                     │
-│          │──────────────│                                                   │
-│          │ id (PK)      │                                                   │
-│          │observation_  │                                                   │
-│          │   id         │                                                   │
-│          │ critique     │                                                   │
-│          │ decision     │                                                   │
-│          │goal_satisfied│                                                   │
-│          │ memory_note  │                                                   │
-│          └──────────────┘                                                   │
+│  ┌────────────────────┐                                                     │
+│  │  agent_ctx         │    Agent configuration (immutable after creation)   │
+│  │────────────────────│                                                     │
+│  │ id (PK)            │                                                     │
+│  │ agent_name         │                                                     │
+│  │ agent_role         │                                                     │
+│  │ goal_title         │                                                     │
+│  │ goal_system_prompt │                                                     │
+│  │ model              │                                                     │
+│  │ model_temp         │                                                     │
+│  │ model_max_*        │                                                     │
+│  │ budget_max_*       │                                                     │
+│  └─────────┬──────────┘                                                     │
+│            │ 1                                                              │
+│            │                                                                │
+│            ▼ N                                                              │
+│  ┌──────────────────────┐                                                   │
+│  │ agent_state          │  Run state (mutable, tracks progress)             │
+│  │──────────────────────│                                                   │
+│  │ id (PK)              │◄───────────────────────────────────────────────┐  │
+│  │ agent_ctx_id         │                                                │  │
+│  │ iterations_completed │                                                │  │
+│  │ steps_used           │                                                │  │
+│  │ tokens_used          │                                                │  │
+│  │ cost_used            │                                                │  │
+│  │ summary              │                                                │  │
+│  │ status               │                                                │  │
+│  └──────────┬───────────┘                                                │  │
+│             │ 1                                                          │  │
+│             │                                                            │  │
+│      ┌──────┴─────────┬───────────────────────────────┐                  │  │
+│      │                │                               │                  │  │
+│      ▼ N              ▼ N                             ▼ N                │  │
+│ ┌──────────┐ ┌──────────────────┐          ┌─────────────────────┐       │  │
+│ │ memory   │ │plan_step         │          │claim_confidence_log │       │  │
+│ │────────  │ │──────────────────│          │─────────────────────│       │  │
+│ │ id       │ │ id (PK)          │          │ id (PK)             │       │  │
+│ │ text     │ │ rationale        │          │ agent_state_id (FK) │───────┘  │
+│ │ tags     │ │ tool_name        │          │ observation_id      │          │
+│ │ source   │ │ args             │          │ statement           │          │
+│ │ embedding│ │ success_criteria │          │ heuristic_confidence│          │
+│ │(vector)  │ │                  │          │ llm_confidence      │          │
+│ └──────────┘ └────────┬─────────┘          │ blended_confidence  │          │
+│                       │ 1                  └─────────────────────┘          │
+│                       │                                                     │
+│                       ▼ N                                                   │
+│                ┌─────────────┐                                              │
+│                │ tool_result │     Result of tool execution                 │
+│                │─────────────│                                              │
+│                │ id (PK)     │                                              │
+│                │ plan_step_id│                                              │
+│                │ ok          │                                              │
+│                │ data (jsonb)│                                              │
+│                │ error       │                                              │
+│                │ meta (jsonb)│                                              │
+│                └──────┬──────┘                                              │
+│                       │ 1                                                   │
+│                       │                                                     │
+│                       ▼ N                                                   │
+│                ┌────────────────┐                                           │
+│                │ observation─── │  Pattern analysis output                  │
+│                │────────────────│                                           │
+│                │ id (PK)        │                                           │
+│                │ tool_result_id │                                           │
+│                │ headline       │                                           │
+│                │ details        │                                           │
+│                │ artifacts      │                                           │
+│                │ quality        │                                           │
+│                └───────┬────────┘                                           │
+│                        │ 1                                                  │
+│                        │                                                    │
+│                        ▼ N                                                  │
+│                ┌─────────────────┐                                          │
+│                │ reflection      │ Goal satisfaction evaluation             │
+│                │─────────────────│                                          │
+│                │ id (PK)         │                                          │
+│                │observation_id   │                                          │
+│                │ critique        │                                          │
+│                │ decision        │                                          │
+│                │goal_satisfied   │                                          │
+│                │ memory_note     │                                          │
+│                └─────────────────┘                                          │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
