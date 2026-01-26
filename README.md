@@ -8,6 +8,48 @@ OGTO is a **goal-oriented AI agent framework** that executes autonomous web rese
 
 [![OGTO Demo](ogto.jpg)](https://www.youtube.com/watch?v=UyfE3nazP_I)
 
+---
+
+## Table of Contents
+
+1. [Key Features](#key-features)
+2. [Tech Stack](#tech-stack)
+3. [Prerequisites Installation (Homebrew)](#prerequisites-installation-homebrew)
+   - [Install Homebrew](#step-1-install-homebrew-if-not-installed)
+   - [Install Node.js via NVM](#step-2-install-nodejs-via-nvm)
+   - [Install Docker Desktop](#step-3-install-docker-desktop)
+   - [Install Supabase CLI](#step-4-install-supabase-cli)
+   - [Install Ollama](#step-5-install-ollama)
+4. [Project Setup](#project-setup)
+   - [Clone Repository](#step-1-clone-repository)
+   - [Install Dependencies](#step-2-install-dependencies)
+   - [Start Ollama & Pull Model](#step-3-start-ollama--pull-model)
+5. [Environment Configuration](#environment-configuration)
+   - [Start Local Supabase](#step-1-start-local-supabase)
+   - [Get Supabase Credentials](#step-2-get-supabase-credentials)
+   - [Create Environment File](#step-3-create-environment-file)
+   - [Google Custom Search Setup](#google-custom-search-setup)
+6. [Database Setup](#database-setup)
+7. [Running the Application](#running-the-application)
+8. [Verification](#verification)
+9. [Quick Start (5 Minutes)](#quick-start-5-minutes)
+10. [The LOOP Strategy](#the-loop-strategy)
+11. [Use Cases & Example Goals](#use-cases--example-goals)
+12. [Key Concepts](#key-concepts)
+13. [Default Configuration](#default-configuration)
+14. [Project Structure](#project-structure)
+15. [Navigation](#navigation)
+16. [Tools Reference](#tools-reference)
+17. [Common Commands](#common-commands)
+18. [Troubleshooting](#troubleshooting)
+19. [Complete Setup Checklist](#complete-setup-checklist)
+20. [Database Schema](#database-schema)
+21. [Vector Store (pgvector)](#vector-store-pgvector)
+22. [Database Usage by Feature](#database-usage-by-feature)
+23. [License](#license)
+
+---
+
 ## Key Features
 
 - 🤖 **Autonomous Research** — Agents iterate until goal is satisfied
@@ -23,7 +65,7 @@ OGTO is a **goal-oriented AI agent framework** that executes autonomous web rese
 | Layer | Technology |
 |-------|------------|
 | **Framework** | Next.js 15 (App Router) |
-| **LLM** | Ollama (local, open-source models) |
+| **LLM** | Ollama (local, open-source private cosumer models) |
 | **Database** | Supabase + Drizzle ORM + pgvector |
 | **Search** | Google Custom Search API |
 | **State** | Jotai + React Hook Form + Zod 4 |
@@ -32,51 +74,204 @@ OGTO is a **goal-oriented AI agent framework** that executes autonomous web rese
 
 ---
 
-## Prerequisites
+## Prerequisites Installation (Homebrew)
 
-- **Node.js** 20+ (recommended)
-- **Docker Desktop** (required for local Supabase)
-- **Supabase CLI** — [Installation Guide](https://supabase.com/docs/guides/local-development/cli/getting-started)
-- **Ollama** — [Download](https://ollama.com)
+### Step 1: Install Homebrew (if not installed)
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+After installation, follow the command line screen instructions to add Homebrew to your PATH:
+
+```bash
+# For Apple Silicon Macs (M1/M2/M3/M4)
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# For Intel Macs
+echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/usr/local/bin/brew shellenv)"
+```
+
+### Step 2: Install Node.js via NVM
+
+Use Node Version Manager (recommended for multiple projects):
+
+```bash
+brew install nvm
+mkdir ~/.nvm
+
+# Add to ~/.zshrc or ~/.zprofile
+echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
+echo '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"' >> ~/.zshrc
+source ~/.zshrc
+
+# Install and use Node.js 22
+nvm install 22
+nvm use 22
+nvm alias default 22
+```
+
+Verify installation:
+
+```bash
+node --version  # Should be v22.x.x or higher
+npm --version   # Should be 10.x.x or higher
+```
+
+### Step 3: Install Docker Desktop
+
+```bash
+brew install --cask docker
+```
+
+After installation:
+1. Open Docker Desktop from Applications
+2. Complete the setup wizard
+3. Ensure Docker is running (whale icon in menu bar)
+
+Verify Docker:
+
+```bash
+docker --version
+docker compose version
+```
+
+### Step 4: Install Supabase CLI
+
+```bash
+brew install supabase/tap/supabase
+```
+
+Verify:
+
+```bash
+supabase --version  # Should be 1.x.x or higher
+```
+
+> ⚠️ **Note: PostgreSQL is NOT required!** Supabase runs PostgreSQL 17 inside a Docker container. Do NOT install `brew install postgresql` — it's unnecessary and may cause port conflicts.
+
+### Step 5: Install Ollama
+
+```bash
+brew install ollama
+```
+
+Or download from [ollama.com](https://ollama.com) for the desktop app.
+
+Verify:
+
+```bash
+ollama --version
+```
 
 ---
 
-## Installation & Setup
+## Project Setup
 
-### Step 1: Clone & Install Dependencies
+### Step 1: Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/pabloorozcoix/ogto
 cd ogto
+```
+
+### Step 2: Install Dependencies
+
+```bash
 npm install
 ```
 
-### Step 2: Start Ollama & Pull Model
+### Step 3: Start Ollama & Pull Model
 
 ```bash
-# Start Ollama server
+# Start Ollama server (keep this running in a terminal)
 ollama serve
+```
 
-# In another terminal, pull the default model
+In a new terminal:
+
+```bash
+# Pull the default model (20B parameter open-source model)
 ollama pull gpt-oss:20b
 ```
 
 > 💡 OGTO uses `gpt-oss:20b` by default — a capable 20B parameter open-source model. You can change this in `src/lib/localOllama.ts`.
 
-### Step 3: Start Local Supabase
+Browse more models at: https://ollama.com/search?o=newest
+
+---
+
+## Environment Configuration
+
+### Step 1: Start Local Supabase
 
 ```bash
 supabase start
 ```
 
-This starts local services on default ports:
+This starts:
 - **Supabase API**: `http://127.0.0.1:54321`
 - **Postgres**: `localhost:54322`
 - **Studio**: `http://127.0.0.1:54323`
 
-After startup, run `supabase status` to see your local credentials.
+When you run `supabase start`, it spins up a Docker container with:
+- PostgreSQL (configured in `supabase/config.toml`)
+- pgvector extension (for embeddings)
+- All other Supabase services (Auth, Storage, Realtime, etc.)
 
-### Step 4: Configure Environment Variables
+So the stack is:
+
+```
+Docker Desktop → Supabase containers → PostgreSQL (inside container)
+```
+
+You only need:
+- Docker Desktop (required)
+- Supabase CLI (to manage the containers)
+
+### Step 2: Get Supabase Credentials
+
+```bash
+supabase status
+```
+
+Note the `Publishable` (anon key) and `Secret` (service_role key) from the output:
+
+```
+╭──────────────────────────────────────╮
+│ Development Tools                    │
+├─────────┬────────────────────────────┤
+│ Studio  │ http://127.0.0.1:54323     │
+│ Mailpit │ http://127.0.0.1:54324     │
+│ MCP     │ http://127.0.0.1:54321/mcp │
+╰─────────┴────────────────────────────╯
+
+╭──────────────────────────────────────────────────────╮
+│ APIs                                                 │
+├────────────────┬─────────────────────────────────────┤
+│ Project URL    │ http://127.0.0.1:54321              │
+│ REST           │ http://127.0.0.1:54321/rest/v1      │
+│ GraphQL        │ http://127.0.0.1:54321/graphql/v1   │
+│ Edge Functions │ http://127.0.0.1:54321/functions/v1 │
+╰────────────────┴─────────────────────────────────────╯
+
+╭───────────────────────────────────────────────────────────────╮
+│ Database                                                      │
+├─────┬─────────────────────────────────────────────────────────┤
+│ URL │ postgresql://postgres:postgres@127.0.0.1:54322/postgres │
+╰─────┴─────────────────────────────────────────────────────────╯
+
+╭──────────────────────────────────────────────────────────────╮
+│ Authentication Keys                                          │
+├─────────────┬────────────────────────────────────────────────┤
+│ Publishable │ sb_publishable_KEY                             │
+│ Secret      │ sb_secret_KEY                                  │
+╰─────────────┴────────────────────────────────────────────────╯
+```
+
+### Step 3: Create Environment File
 
 Create `.env.local` in the project root:
 
@@ -95,14 +290,10 @@ Create `.env.local` in the project root:
 # Get these values from `supabase status` after running `supabase start`
 # -----------------------------------------------------------------------------
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
-NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-local-anon-key>
-
-# Database credentials for migrations and diagnostics
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-publishable-key-from-supabase-status>
 NEXT_PUBLIC_SUPABASE_POSTGRES_USER=postgres
 NEXT_PUBLIC_SUPABASE_POSTGRES_PASSWORD=postgres
-
-# Service role key for pgvector operations (from `supabase status`)
-NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=<your-local-service-role-key>
+NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=<your-secret-key-from-supabase-status>
 
 # -----------------------------------------------------------------------------
 # Google Custom Search API (Required for web search)
@@ -114,30 +305,50 @@ NEXT_PUBLIC_GOOGLE_SEARCH_API_KEY=<your-google-api-key>
 # -----------------------------------------------------------------------------
 # Optional: OpenAI API Key (not required for local Ollama setup)
 # -----------------------------------------------------------------------------
-# OPENAI_API_KEY=<your-openai-key>
+# NEXT_PUBLIC_OPENAI_API_KEY=sk-your-key-here
 ```
 
 #### Why `NEXT_PUBLIC_` Variables?
 
-This project is designed for **local-first development** with open-source models running on your machine. Since we're using a consumer open-source small language model (Ollama) and local Supabase, there are no paid API keys or sensitive credentials that require server-side protection.
+This project is designed for **local-first development** with open-source private cosumer models running on your machine. Since we're using a consumer open-source small language model (Ollama) and local Supabase, there are no paid API keys or sensitive credentials that require server-side protection.
 
 **For future optimization:** When deploying to production or using paid APIs (OpenAI, Anthropic, etc.), migrate sensitive variables to server-only environment variables by:
 1. Removing the `NEXT_PUBLIC_` prefix
 2. Accessing them only in API routes (`/api/*`) or Server Components
 3. Using Next.js runtime environment variables for dynamic configuration
 
-### Step 5: Initialize Database
+---
+
+## Database Setup
+
+### Initialize Database Schema
 
 ```bash
 npm run db:init
 ```
 
 This runs the migration script that:
-- Enables required PostgreSQL extensions (`pgcrypto`, `vector`)
-- Creates OGTO tables and indexes
-- Prepares the database for agent execution traces
+- Enables PostgreSQL extensions (`pgcrypto`, `vector`)
+- Creates all OGTO tables with proper schema
+- Sets up indexes for pgvector similarity search
 
-### Step 6: Start OGTO
+### Verify Database
+
+Open Supabase Studio at `http://127.0.0.1:54323` and check that these tables exist:
+- `agent_ctx`
+- `agent_state`
+- `memory`
+- `plan_step`
+- `tool_result`
+- `observation`
+- `reflection`
+- `claim_confidence_log`
+
+---
+
+## Running the Application
+
+### Development Mode
 
 ```bash
 npm run dev
@@ -424,16 +635,106 @@ Each page has a **Help** tab with detailed documentation.
 | Loop stops early | Step budget exceeded | Increase `budget_max_steps` |
 | `pg_dump` version mismatch | Host/container mismatch | Run pg_dump inside container |
 
-### Verification Checklist
+### Ollama not responding
 
-Before running your first agent:
+```bash
+# Check if Ollama is running
+curl http://localhost:11434/api/tags
 
-- [ ] Ollama server running (`ollama serve`)
-- [ ] Model pulled (`ollama pull gpt-oss:20b`)
-- [ ] Supabase running (`supabase start`)
-- [ ] `.env.local` configured with all keys
+# Restart Ollama
+pkill ollama
+ollama serve
+```
+
+### Database connection failed
+
+```bash
+# Check Supabase status
+supabase status
+
+# Restart Supabase
+supabase stop
+supabase start
+```
+
+### pgvector errors
+
+```bash
+# Re-run database initialization
+npm run db:init
+```
+
+### Port conflicts
+
+```bash
+# Check what's using port 3000
+lsof -i :3000
+
+# Kill the process
+kill -9 <PID>
+```
+
+### Docker issues
+
+```bash
+# Restart Docker Desktop
+# Or from terminal:
+killall Docker
+open -a Docker
+```
+
+---
+
+## Complete Setup Checklist
+
+- [ ] Homebrew installed (`brew --version`)
+- [ ] Node.js 20+ installed (`node --version`)
+- [ ] Docker Desktop running (`docker --version`)
+- [ ] Supabase CLI installed (`supabase --version`)
+- [ ] Ollama installed (`ollama --version`)
+- [ ] `npm install` completed
+- [ ] Ollama model pulled (`ollama pull gpt-oss:20b`)
+- [ ] Supabase started (`supabase start`)
+- [ ] `.env.local` configured
 - [ ] Database initialized (`npm run db:init`)
-- [ ] All Settings tests passing ✅
+- [ ] Dev server running (`npm run dev`)
+- [ ] All tests pass in Settings page
+
+---
+
+## Quick Start (One-Liner Setup)
+
+For experienced developers, here's the complete setup in order:
+
+```bash
+# 1. Install dependencies via Homebrew
+brew install nvm supabase/tap/supabase ollama
+brew install --cask docker
+
+# 2. Setup NVM and Node.js
+mkdir ~/.nvm
+echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
+echo '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"' >> ~/.zshrc
+source ~/.zshrc
+nvm install 22 && nvm use 22
+
+# 3. Clone and setup project
+git clone https://github.com/pabloorozcoix/ogto && cd ogto
+npm install
+
+# 4. Start services (in separate terminals)
+ollama serve &
+ollama pull gpt-oss:20b
+open -a Docker
+sleep 10  # Wait for Docker
+supabase start
+
+# 5. Setup environment (create .env.local with your API keys)
+
+# 6. Initialize database and run
+npm run db:init
+npm run dev
+```
 
 ---
 

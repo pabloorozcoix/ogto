@@ -8,11 +8,7 @@
     "start": "next start",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "type-check": "tsc --noEmit",
-    "scan:orphan-params": "node scripts/scan-orphan-params.mjs",
-    "scan:magic-numbers": "node scripts/scan-magic-numbers.mjs",
-    "db:init": "docker exec -i supabase_db_og2 psql -U postgres -d postgres < drizzle/migrations/init_db.sql",
-    "db:generate": "drizzle-kit generate:pg --config ./drizzle.config.ts",
-    "db:push": "NEXT_PUBLIC_SUPABASE_POSTGRES_USER=postgres NEXT_PUBLIC_SUPABASE_POSTGRES_PASSWORD=postgres npx drizzle-kit push",
+    "db:init": "docker exec -i supabase_db_ogto psql -U postgres -d postgres < drizzle/migrations/init_db.sql",
     "test": "vitest run --environment jsdom --setupFiles ./setupTests.ts",
     "test:ui": "vitest --ui --environment jsdom --setupFiles ./setupTests.ts"
   },
